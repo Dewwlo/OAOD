@@ -5,11 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\AccountabilityLib\AccountabilityLib.csproj" />
+    <ProjectReference Include="..\BengasBowlingLib\BengasBowlingLib.csproj" />
   </ItemGroup>
 
 </Project>

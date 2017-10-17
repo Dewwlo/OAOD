@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AccountabilityLib
+﻿namespace AccountabilityLib
 {
     public class Party
     {

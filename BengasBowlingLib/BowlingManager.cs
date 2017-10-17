@@ -2,7 +2,8 @@
 
 namespace BengasBowlingLib
 {
-    public class Member
+    public class BowlingManager
     {
+
     }
 }
