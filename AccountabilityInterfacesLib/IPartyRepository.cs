@@ -6,7 +6,8 @@ namespace AccountabilityInterfacesLib
 {
     public interface IPartyRepository
     {
-        Party Create(string name, string legalId);
+        void Create(string name, string legalId);
+        List<Party> All();
         List<Party> Get(string term);
     }
 }

@@ -23,6 +23,8 @@ namespace BengansBowlingLib
             _partyRepository.Create(name, legalId);
         }
 
+        public int PartyCount => _partyRepository.All().Count;
+
         public void CreateCompetition(string name, decimal? winnerPriceSum)
         {
             if (winnerPriceSum == null)
