@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using AccountabilityLib;
 
-namespace BengasBowlingLib
+namespace BengansBowlingModelsLib
 {
     public class Competition
     {

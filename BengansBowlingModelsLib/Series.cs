@@ -1,7 +1,7 @@
 ﻿using System;
 using AccountabilityLib;
 
-namespace BengasBowlingLib
+namespace BengansBowlingModelsLib
 {
     public class Series
     {

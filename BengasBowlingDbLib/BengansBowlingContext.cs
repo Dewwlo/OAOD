@@ -1,8 +1,8 @@
 ﻿using AccountabilityLib;
-using BengasBowlingLib;
+using BengansBowlingModelsLib;
 using Microsoft.EntityFrameworkCore;
 
-namespace BengasBowlingDbLib
+namespace BengansBowlingDbLib
 {
     public class BengansBowlingContext : DbContext
     {
@@ -18,7 +18,6 @@ namespace BengasBowlingDbLib
         public DbSet<Competition> Competitions { get; set; }
         public DbSet<Lane> Lanes { get; set; }
         public DbSet<Match> Matches { get; set; }
-        //public DbSet<RoundSeries> RoundSeries { get; set; }
         public DbSet<Series> Series { get; set; }
     } 
 }
