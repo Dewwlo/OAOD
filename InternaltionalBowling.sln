@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BengansBowlingDbLib", "Beng
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BengansBowlingModelsLib", "BengansBowlingModelsLib\BengansBowlingModelsLib.csproj", "{2353045E-DA29-4832-BD3B-2ED06B29CE5B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BengansBowlingIntergrationTestsLib", "BengansBowlingIntergrationTestsLib\BengansBowlingIntergrationTestsLib.csproj", "{DCF8815A-BB42-44F0-9F18-708A7D20450E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{2353045E-DA29-4832-BD3B-2ED06B29CE5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2353045E-DA29-4832-BD3B-2ED06B29CE5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2353045E-DA29-4832-BD3B-2ED06B29CE5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCF8815A-BB42-44F0-9F18-708A7D20450E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCF8815A-BB42-44F0-9F18-708A7D20450E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCF8815A-BB42-44F0-9F18-708A7D20450E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCF8815A-BB42-44F0-9F18-708A7D20450E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +66,7 @@ Global
 		{2E947B58-EF32-4FCE-98D5-B625B6A61910} = {D89C404D-C8B9-4505-BAE6-236FD798E920}
 		{F5E393FD-1707-4CD3-BEE4-C003FEB271C7} = {D89C404D-C8B9-4505-BAE6-236FD798E920}
 		{2353045E-DA29-4832-BD3B-2ED06B29CE5B} = {D89C404D-C8B9-4505-BAE6-236FD798E920}
+		{DCF8815A-BB42-44F0-9F18-708A7D20450E} = {D89C404D-C8B9-4505-BAE6-236FD798E920}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C2E60325-07C7-4CE7-BB55-FE06AF343962}
