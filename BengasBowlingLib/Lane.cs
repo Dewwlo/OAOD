@@ -10,6 +10,5 @@ namespace BengasBowlingLib
         public int LaneId { get; set; }
         [Required]
         public string Name { get; set; }
-        public List<TimePeriod> TimePeriods { get; set; }
     }
 }
