@@ -12,6 +12,7 @@ namespace BengansBowlingIntergrationTestsLib
     public class BengansBowlingTests
     {
         private readonly BengansBowlingContext _context;
+        private readonly BowlingManager _sut;
         
         public BengansBowlingTests()
         {
@@ -22,49 +23,80 @@ namespace BengansBowlingIntergrationTestsLib
             _context = new BengansBowlingContext(optionsBuilder.Options);
             _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
+            _sut = new BowlingManager(
+                new SqlPartyRepository(_context), 
+                new SqlCompetitionRepository(_context), 
+                new SqlMatchRepository(_context),
+                new SqlTimePeriodRepository(_context));
         }
 
         [Fact]
         public void CreateParties()
         {
-            var sut = new BowlingManager(new SqlPartyRepository(_context), new SqlCompetitionRepository(_context), new SqlMatchRepository(_context));
-            sut.CreateParty("Sture Sturesson", "7701012345");
-            sut.CreateParty("Greger Gregersson", "7801012345");
-            Assert.Equal(2, sut.GetAllParties.Count);
+            _sut.CreateParty("Sture Sturesson", "7701012345");
+            _sut.CreateParty("Greger Gregersson", "7801012345");
+            Assert.Equal(2, _sut.GetAllParties.Count);
         }
 
         [Fact]
         public void CreateMatch()
         {
-            var sut = new BowlingManager(new SqlPartyRepository(_context), new SqlCompetitionRepository(_context), new SqlMatchRepository(_context));
-
-            sut.CreateParty("Sture Sturesson", "7701012345");
-            sut.CreateParty("Greger Gregersson", "7801012345");
-
-            sut.CreateMatch(
-                sut.GetAllParties,
-                new TimePeriod { TimePeriodId = 1, FromDate = DateTime.Now, ToDate = DateTime.Now.AddHours(2) }, 
+            _sut.CreateParty("Sture Sturesson", "7701012345");
+            _sut.CreateParty("Greger Gregersson", "7801012345");
+            _sut.CreateTimePeriod(DateTime.Now, DateTime.Now.AddHours(2));
+            _sut.CreateMatch(
+                _sut.GetAllParties,
+                _sut.GetAllTimePeriods().FirstOrDefault(), 
                 new Lane { LaneId = 1, Name = "Bana 1" });
 
-            Assert.Equal(2, sut.GetMatchCompetitors(_context.Matches.FirstOrDefaultAsync().Id).Count);
+            Assert.Equal(2, _sut.GetMatchCompetitors(_context.Matches.FirstOrDefaultAsync().Id).Count);
         }
 
         [Fact]
         public void CreateCompetition()
         {
-            var sut = new BowlingManager(new SqlPartyRepository(_context), new SqlCompetitionRepository(_context), new SqlMatchRepository(_context));
+            _sut.CreateParty("Sture Sturesson", "7701012345");
+            _sut.CreateParty("Greger Gregersson", "7801012345");
+            _sut.CreateCompetition("Tävling1", 2000M);
+            _sut.CreateCompetition("Tävling2");
+            _sut.CreateCompetition("Tävling3", 5000M);
+            _sut.GetAllParties.ForEach(p => _sut.AddPlayerToCompetition(_context.Competitions.FirstOrDefault().CompetitionId, p));
 
-            sut.CreateParty("Sture Sturesson", "7701012345");
-            sut.CreateParty("Greger Gregersson", "7801012345");
-            sut.CreateCompetition("Tävling1", 2000M);
-            sut.CreateCompetition("Tävling2");
-            sut.CreateCompetition("Tävling3", 5000M);
-            sut.GetAllParties.ForEach(p => sut.AddPlayerToCompetition(_context.Competitions.FirstOrDefault().CompetitionId, p));
-
-            Assert.Equal(3, sut.GetAllCompetitions().Count);
-            Assert.Equal(2, sut.GetAllCompetitionCompetitors(_context.Competitions.FirstOrDefault().CompetitionId).Count);
-            Assert.Equal(0, sut.GetAllCompetitionCompetitors(_context.Competitions.OrderByDescending(c => c.CompetitionId).FirstOrDefault().CompetitionId).Count);
+            Assert.Equal(3, _sut.GetAllCompetitions().Count);
+            Assert.Equal(2, _sut.GetAllCompetitionCompetitors(_context.Competitions.FirstOrDefault().CompetitionId).Count);
+            Assert.Equal(0, _sut.GetAllCompetitionCompetitors(_context.Competitions.OrderByDescending(c => c.CompetitionId).FirstOrDefault().CompetitionId).Count);
             Assert.Equal(2000M, _context.Competitions.FirstOrDefault().WinnerPriceSum);
+        }
+
+        [Fact]
+        public void SetupCompetitionWithMatchesAndCompetitors()
+        {
+            _sut.CreateParty("Sture Sturesson", "7701012345");
+            _sut.CreateParty("Greger Gregersson", "7801012345");
+            _sut.CreateCompetition("Tävling1", 2000M);
+
+            var compId = _context.Competitions.FirstOrDefault().CompetitionId;
+            _sut.GetAllParties.ForEach(p => _sut.AddPlayerToCompetition(compId, p));
+            _sut.CreateTimePeriod(DateTime.Now, DateTime.Now.AddHours(2));
+            _sut.CreateTimePeriod(DateTime.Now.AddHours(2), DateTime.Now.AddHours(4));
+
+            _sut.CreateMatch(
+                _sut.GetAllParties,
+                _sut.GetAllTimePeriods().FirstOrDefault(),
+                new Lane { LaneId = 1, Name = "Bana 1" });
+            _sut.CreateMatch(
+                _sut.GetAllParties,
+                _sut.GetAllTimePeriods().FirstOrDefault(),
+                new Lane { LaneId = 2, Name = "Bana 2" },
+                _context.Competitions.FirstOrDefault());
+            _sut.AddMatchToCompetition(compId, _sut.GetAllMatches().FirstOrDefault());
+
+            var competition = _context.Competitions.FirstOrDefault();
+
+            Assert.Equal(2, competition.Matches.Count);
+            Assert.Equal(2000M, competition.WinnerPriceSum);
+            Assert.Equal(2, competition.Competitors.Count);
+            Assert.Equal(2, competition.Matches.FirstOrDefault().Players.Count);
         }
     }
 }

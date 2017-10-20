@@ -7,7 +7,7 @@ using BengansBowlingDbLib;
 
 namespace BengansBowlingLib
 {
-    public class SqlPartyRepository: IPartyRepository
+    public class SqlPartyRepository : IPartyRepository
     {
         private BengansBowlingContext _context;
 

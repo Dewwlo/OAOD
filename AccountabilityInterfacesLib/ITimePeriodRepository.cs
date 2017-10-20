@@ -5,10 +5,10 @@ using AccountabilityLib;
 
 namespace AccountabilityInterfacesLib
 {
-    interface ITimePeriodRepository
+    public interface ITimePeriodRepository
     {
         void Create(DateTime fromDate, DateTime toDate);
-        List<TimePeriod> Get(int timePeriodId);
+        TimePeriod Get(int timePeriodId);
         List<TimePeriod> All();
     }
 }
