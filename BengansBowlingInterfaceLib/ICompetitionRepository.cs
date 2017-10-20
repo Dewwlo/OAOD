@@ -8,9 +8,9 @@ namespace BengansBowlingInterfaceLib
     {
         void Create(string name);
         void Create(string name, decimal winnerPriceSum);
-        List<Competition> GetAllCompetitions();
-        List<Competition> GetCompetitions(string term);
-        Party GetCompetitionWinner(int competitionId);
+        void AddCompetitor(int competitionId, Party player);
+        List<Competition> All();
+        Party Winner(int competitionId);
         List<Party> GetCompetitors(int competitionId);
     }
 }

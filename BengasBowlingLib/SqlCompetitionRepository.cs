@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AccountabilityLib;
+using BengansBowlingDbLib;
 using BengansBowlingInterfaceLib;
 using BengansBowlingModelsLib;
 
@@ -7,34 +10,43 @@ namespace BengansBowlingLib
 {
     public class SqlCompetitionRepository : ICompetitionRepository
     {
+        private readonly BengansBowlingContext _context;
+        public SqlCompetitionRepository(BengansBowlingContext context)
+        {
+            _context = context;
+        }
+
         public void Create(string name)
         {
-            throw new System.NotImplementedException();
+            _context.Competitions.Add(new Competition { Name = name, Competitors = new List<Party>() });
+            _context.SaveChanges();
         }
 
         public void Create(string name, decimal winnerPriceSum)
         {
-            throw new System.NotImplementedException();
+            _context.Competitions.Add(new Competition { Name = name, WinnerPriceSum = winnerPriceSum, Competitors = new List<Party>() });
+            _context.SaveChanges();
         }
 
-        public List<Competition> GetAllCompetitions()
+        public void AddCompetitor(int competitionId, Party player)
         {
-            throw new System.NotImplementedException();
+            _context.Competitions.SingleOrDefault(c => c.CompetitionId == competitionId).Competitors.Add(player);
+            _context.SaveChanges();
         }
 
-        public List<Competition> GetCompetitions(string term)
+        public List<Competition> All()
         {
-            throw new System.NotImplementedException();
+            return _context.Competitions.ToList();
         }
 
-        public Party GetCompetitionWinner(int competitionId)
+        public Party Winner(int competitionId)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public List<Party> GetCompetitors(int competitionId)
         {
-            throw new System.NotImplementedException();
+            return _context.Competitions.SingleOrDefault(c => c.CompetitionId == competitionId).Competitors.ToList();
         }
     }
 }

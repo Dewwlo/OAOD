@@ -2,6 +2,7 @@
 using AccountabilityInterfacesLib;
 using AccountabilityLib;
 using BengansBowlingInterfaceLib;
+using BengansBowlingModelsLib;
 
 namespace BengansBowlingLib
 {
@@ -23,9 +24,9 @@ namespace BengansBowlingLib
             _partyRepository.Create(name, legalId);
         }
 
-        public int PartyCount => _partyRepository.All().Count;
+        public List<Party> GetAllParties => _partyRepository.All();
 
-        public void CreateCompetition(string name, decimal? winnerPriceSum)
+        public void CreateCompetition(string name, decimal? winnerPriceSum  = null)
         {
             if (winnerPriceSum == null)
                 _competitionRepository.Create(name);
@@ -33,12 +34,20 @@ namespace BengansBowlingLib
                 _competitionRepository.Create(name, (decimal)winnerPriceSum);
         }
 
-        public void CreateMatch(List<Party> players, TimePeriod timePeriod, int laneId, int? competitionId)
+        public void AddPlayerToCompetition(int competitionId, Party party) => _competitionRepository.AddCompetitor(competitionId, party);
+
+        public List<Competition> GetAllCompetitions() => _competitionRepository.All();
+
+        public List<Party> GetAllCompetitionCompetitors(int matchId) => _competitionRepository.GetCompetitors(matchId);
+
+        public void CreateMatch(List<Party> players, TimePeriod timePeriod, Lane lane, Competition competition = null)
         {
-            if (competitionId == null)
-                _matchRepository.Create(players, timePeriod, laneId);
+            if (competition == null)
+                _matchRepository.Create(players, timePeriod, lane);
             else
-                _matchRepository.Create(players, timePeriod, laneId, (int)competitionId);
+                _matchRepository.Create(players, timePeriod, lane, competition);
         }
+
+        public List<Party> GetMatchCompetitors(int matchId) => _matchRepository.GetCompetitors(matchId);
     }
 }
