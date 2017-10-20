@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using AccountabilityInterfacesLib;
 using AccountabilityLib;
 using BengansBowlingDbLib;
 using BengansBowlingLib;
@@ -27,7 +28,8 @@ namespace BengansBowlingIntergrationTestsLib
                 new SqlPartyRepository(_context), 
                 new SqlCompetitionRepository(_context), 
                 new SqlMatchRepository(_context),
-                new SqlTimePeriodRepository(_context));
+                new SqlTimePeriodRepository(_context),
+                new SqlSeriesRepository(_context));
         }
 
         [Fact]
@@ -75,8 +77,8 @@ namespace BengansBowlingIntergrationTestsLib
             _sut.CreateParty("Greger Gregersson", "7801012345");
             _sut.CreateCompetition("Tävling1", 2000M);
 
-            var compId = _context.Competitions.FirstOrDefault().CompetitionId;
-            _sut.GetAllParties.ForEach(p => _sut.AddPlayerToCompetition(compId, p));
+            var competitionId = _context.Competitions.FirstOrDefault().CompetitionId;
+            _sut.GetAllParties.ForEach(p => _sut.AddPlayerToCompetition(competitionId, p));
             _sut.CreateTimePeriod(DateTime.Now, DateTime.Now.AddHours(2));
             _sut.CreateTimePeriod(DateTime.Now.AddHours(2), DateTime.Now.AddHours(4));
 
@@ -89,14 +91,19 @@ namespace BengansBowlingIntergrationTestsLib
                 _sut.GetAllTimePeriods().FirstOrDefault(),
                 new Lane { LaneId = 2, Name = "Bana 2" },
                 _context.Competitions.FirstOrDefault());
-            _sut.AddMatchToCompetition(compId, _sut.GetAllMatches().FirstOrDefault());
+            _sut.AddMatchToCompetition(competitionId, _sut.GetAllMatches().FirstOrDefault());
 
             var competition = _context.Competitions.FirstOrDefault();
 
             Assert.Equal(2, competition.Matches.Count);
-            Assert.Equal(2000M, competition.WinnerPriceSum);
-            Assert.Equal(2, competition.Competitors.Count);
             Assert.Equal(2, competition.Matches.FirstOrDefault().Players.Count);
+        }
+
+        [Fact]
+        public void SeriesTests()
+        {
+            var score = _sut.GetSeriesScore;
+            Assert.Equal(300, score);
         }
     }
 }

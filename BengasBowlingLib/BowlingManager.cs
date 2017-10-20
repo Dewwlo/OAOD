@@ -13,17 +13,20 @@ namespace BengansBowlingLib
         private readonly ICompetitionRepository _competitionRepository;
         private readonly IMatchRepository _matchRepository;
         private readonly ITimePeriodRepository _timePeriodRepository;
+        private readonly ISeriesRepository _seriesRepository;
 
         public BowlingManager(
             IPartyRepository partyRepository, 
             ICompetitionRepository competitionRepository, 
             IMatchRepository matchRepository,
-            ITimePeriodRepository timePeriodRepository)
+            ITimePeriodRepository timePeriodRepository,
+            ISeriesRepository seriesRepository)
         {
             _partyRepository = partyRepository;
             _competitionRepository = competitionRepository;
             _matchRepository = matchRepository;
             _timePeriodRepository = timePeriodRepository;
+            _seriesRepository = seriesRepository;
         }
 
         public void CreateParty(string name, string legalId) => _partyRepository.Create(name, legalId);
@@ -61,5 +64,7 @@ namespace BengansBowlingLib
         public void CreateTimePeriod(DateTime fromDate, DateTime toDate) => _timePeriodRepository.Create(fromDate, toDate);
 
         public List<TimePeriod> GetAllTimePeriods() => _timePeriodRepository.All();
+
+        public int GetSeriesScore => _seriesRepository.CalculateSeriesScore();
     }
 }
