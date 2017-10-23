@@ -11,5 +11,6 @@ namespace BengansBowlingInterfaceLib
         List<Match> All();
         List<Party> GetCompetitors(int matchId);
         Party Winner(int matchId);
+        Party YearChampion(int year);
     }
 }

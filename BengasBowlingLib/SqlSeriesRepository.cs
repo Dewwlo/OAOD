@@ -33,10 +33,12 @@ namespace BengansBowlingLib
 
         public void AddScore(int seriesId, int score)
         {
-            
+            _context.Series.SingleOrDefault(s => s.SeriesId == seriesId).Score = score;
+            _context.SaveChanges();
         }
 
-        public int CalculateSeriesScore()
+        // Incomplete
+        public int CalculateSeriesScore(int[,] array)
         {
             var seriesScore = new int[12];
             var lastFrame = "";
@@ -44,11 +46,31 @@ namespace BengansBowlingLib
 
             for (int frame = 0; frame <= 11; frame++)
             {
-                var frameScore = new [,]{{10,0}};
+                //var frameScore = new [,]{{10,0}};
+                //var frameScore = GenerateFrameScore();
+                var frameScore = new [,]{{ array[frame,0], array[frame,1]}};
                 if (frame < 9)
                 {
                     seriesScore[frame] = frameScore[0, 0] + frameScore[0, 1];
+                }
+                else
+                {
+                    if (frameScore[0, 0] == 10)
+                        seriesScore[frame] = 10;
+                    else if (frameScore[0, 0] + frameScore[0, 1] == 10 && frame != 11)
+                    {
+                        seriesScore[frame] = frameScore[0, 0] + frameScore[0, 1];
+                        //frame += 1;
+                        //seriesScore[frame] = frameScore[0, 1];
+                    }
+                    else if (frame == 10)
+                        seriesScore[frame] = frameScore[0, 0];
+                    else
+                        frame = 12;
+                }
 
+                if (frame < 9)
+                {
                     switch (lastFrame)
                     {
                         case "strike":
@@ -59,23 +81,8 @@ namespace BengansBowlingLib
                             break;
                     }
                 }
-                else
-                {
-                    if (frameScore[0, 0] == 10)
-                        seriesScore[frame] = 10;
-                    else if (frameScore[0, 0] + frameScore[0, 1] == 10 && frame != 11)
-                    {
-                        seriesScore[frame] = frameScore[0, 0];
-                        frame += 1;
-                        seriesScore[frame] = frameScore[0, 1];
-                    }
-                    else if (frame == 11)
-                        seriesScore[frame] = frameScore[0, 0];
-                    else
-                        frame = 12;
-                }
 
-                if (secondLastFrame == "strike")
+                if (secondLastFrame == "strike" && lastFrame == "strike")
                     seriesScore[frame - 2] += frameScore[0, 0];
 
                 secondLastFrame = lastFrame;

@@ -33,7 +33,7 @@ namespace BengansBowlingIntergrationTestsLib
         }
 
         [Fact]
-        public void CreateParties()
+        public void CreatePartiesTest()
         {
             _sut.CreateParty("Sture Sturesson", "7701012345");
             _sut.CreateParty("Greger Gregersson", "7801012345");
@@ -41,7 +41,7 @@ namespace BengansBowlingIntergrationTestsLib
         }
 
         [Fact]
-        public void CreateMatch()
+        public void CreateMatchTest()
         {
             _sut.CreateParty("Sture Sturesson", "7701012345");
             _sut.CreateParty("Greger Gregersson", "7801012345");
@@ -55,7 +55,7 @@ namespace BengansBowlingIntergrationTestsLib
         }
 
         [Fact]
-        public void CreateCompetition()
+        public void CreateCompetitionTest()
         {
             _sut.CreateParty("Sture Sturesson", "7701012345");
             _sut.CreateParty("Greger Gregersson", "7801012345");
@@ -71,7 +71,7 @@ namespace BengansBowlingIntergrationTestsLib
         }
 
         [Fact]
-        public void SetupCompetitionWithMatchesAndCompetitors()
+        public void SetupCompetitionWithMatchesAndCompetitorsTest()
         {
             _sut.CreateParty("Sture Sturesson", "7701012345");
             _sut.CreateParty("Greger Gregersson", "7801012345");
@@ -100,10 +100,78 @@ namespace BengansBowlingIntergrationTestsLib
         }
 
         [Fact]
-        public void SeriesTests()
+        public void MatchWinnerTest()
         {
-            var score = _sut.GetSeriesScore;
-            Assert.Equal(300, score);
+            _sut.CreateParty("Sture Sturesson", "7701012345");
+            _sut.CreateParty("Greger Gregersson", "7801012345");
+            _sut.CreateTimePeriod(DateTime.Now, DateTime.Now.AddHours(2));
+            _sut.CreateMatch(
+                _sut.GetAllParties,
+                _sut.GetAllTimePeriods().FirstOrDefault(), 
+                new Lane { LaneId = 1, Name = "Bana 1" });
+
+            var playerOne = _context.Parties.FirstOrDefault();
+            var playerTwo = _context.Parties.Skip(1).FirstOrDefault();
+            var match = _context.Matches.FirstOrDefault();
+
+            for (int series = 0; series < 3; series++)
+            {
+                _sut.CreateSeries(playerOne, match);
+                _sut.AddSeriesScore(_context.Series.OrderByDescending(o => o.SeriesId).FirstOrDefault().SeriesId, 100);
+            }
+
+            for (int series = 0; series < 3; series++)
+            {
+                _sut.CreateSeries(playerTwo, match);
+                _sut.AddSeriesScore(_context.Series.OrderByDescending(o => o.SeriesId).FirstOrDefault().SeriesId, 101);
+            }
+
+            Assert.Equal("7801012345", _sut.GetMatchWinner(match.MatchId).LegalId);
         }
+
+        [Fact]
+        public void YearChampionTest()
+        {
+   
+            _sut.CreateParty("Sture Sturesson", "7701012345");
+            _sut.CreateParty("Greger Gregersson", "7801012345");
+            _sut.CreateTimePeriod(DateTime.Now, DateTime.Now.AddHours(2));
+
+            for (int match = 0; match < 3; match++)
+            {
+                _sut.CreateMatch(
+                    _sut.GetAllParties,
+                    _sut.GetAllTimePeriods().FirstOrDefault(),
+                    new Lane { LaneId = 1, Name = "Bana 1" });
+
+                var playerOne = _context.Parties.FirstOrDefault();
+                var playerTwo = _context.Parties.Skip(1).FirstOrDefault();
+                var currentMatch = _context.Matches.OrderByDescending(o => o.MatchId).FirstOrDefault();
+
+                for (int i = 0; i < 3; i++)
+                {
+                    _sut.CreateSeries(playerOne, currentMatch);
+                    _sut.AddSeriesScore(_context.Series.OrderByDescending(o => o.SeriesId).FirstOrDefault().SeriesId, 102);
+                }
+
+                for (int i = 0; i < 3; i++)
+                {
+                    _sut.CreateSeries(playerTwo, currentMatch);
+                    _sut.AddSeriesScore(_context.Series.OrderByDescending(o => o.SeriesId).FirstOrDefault().SeriesId, 101);
+                }
+            }
+
+
+
+            Assert.Equal("7701012345", _sut.GetYearChampion(2017).LegalId);
+        }
+
+        //[Fact]
+        //public void SeriesTests()
+        //{
+        //    var array = new [,]{{10, 0}, {6, 4}, {3, 5}, {10, 0}, {10, 0}, {2, 0}, {5, 3}, {7,3}, {8, 2}, {10, 0}, {10, 0}, { 10, 0 } };
+        //    var score = _sut.GetSeriesScore(array);
+        //    Assert.Equal(153, score);
+        //}
     }
 }

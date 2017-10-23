@@ -29,7 +29,7 @@ namespace BengansBowlingLib
             _seriesRepository = seriesRepository;
         }
 
-        public void CreateParty(string name, string legalId) => _partyRepository.Create(name, legalId);
+        public void CreateParty(string name, string legalId) => _seriesRepository.CreateParty(name, legalId);
 
         public List<Party> GetAllParties => _partyRepository.All();
 
@@ -65,6 +65,14 @@ namespace BengansBowlingLib
 
         public List<TimePeriod> GetAllTimePeriods() => _timePeriodRepository.All();
 
-        public int GetSeriesScore => _seriesRepository.CalculateSeriesScore();
+        public void CreateSeries(Party party, Match match) => _seriesRepository.Create(party, match);
+
+        public void AddSeriesScore(int seriesId, int score) => _seriesRepository.AddScore(seriesId, score);
+
+        public Party GetMatchWinner(int matchId) => _matchRepository.Winner(matchId);
+
+        public int GetSeriesScore(int[,] array) => _seriesRepository.CalculateSeriesScore(array);
+
+        public Party GetYearChampion(int year) => _matchRepository.YearChampion(year);
     }
 }

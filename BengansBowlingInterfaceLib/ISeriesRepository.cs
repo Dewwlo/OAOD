@@ -10,6 +10,6 @@ namespace BengansBowlingInterfaceLib
         Series Get(int seriesId);
         List<Series> All();
         void AddScore(int seriesId, int score);
-        int CalculateSeriesScore();
+        int CalculateSeriesScore(int[,] array);
     }
 }
