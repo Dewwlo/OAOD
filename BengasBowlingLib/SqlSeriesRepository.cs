@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AccountabilityLib;
 using BengansBowlingDbLib;
 using BengansBowlingInterfaceLib;
 using BengansBowlingModelsLib;
@@ -15,9 +14,9 @@ namespace BengansBowlingLib
         {
             _context = context;
         }
-        public void Create(Party party, Match match)
+        public void Create(Player player, Match match)
         {
-            _context.Series.Add(new Series { Party = party, Match = match });
+            _context.Series.Add(new Series { Player = player, Match = match });
             _context.SaveChanges();
         }
 

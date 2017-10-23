@@ -1,5 +1,4 @@
 ﻿using System;
-using AccountabilityLib;
 
 namespace BengansBowlingModelsLib
 {
@@ -8,8 +7,8 @@ namespace BengansBowlingModelsLib
         public int SeriesId { get; set; }
         public int MatchId { get; set; }
         public Match Match { get; set; }
-        public Guid PartyId { get; set; }
-        public Party Party { get; set; }
+        public Guid PlayerId { get; set; }
+        public Player Player { get; set; }
         public int Score { get; set; }
     }
 }

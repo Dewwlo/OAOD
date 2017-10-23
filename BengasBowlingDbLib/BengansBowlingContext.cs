@@ -13,7 +13,24 @@ namespace BengansBowlingDbLib
             this.options = options;
         }
 
-        public DbSet<Party> Parties { get; set; }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<PlayerMatch>()
+                .HasKey(pm => new { pm.MatchId, pm.PlayerId });
+
+            builder.Entity<PlayerMatch>()
+                .HasOne(pm => pm.Player)
+                .WithMany(m => m.Matches)
+                .HasForeignKey(p => p.PlayerId);
+
+            builder.Entity<PlayerMatch>()
+                .HasOne(pm => pm.Match)
+                .WithMany(p => p.Players)
+                .HasForeignKey(m => m.MatchId);
+        }
+
+        public DbSet<Player> Players { get; set; }
+        public DbSet<PlayerMatch> PlayerMatches { get; set; }
         public DbSet<TimePeriod> TimePeriods { get; set; }
         public DbSet<Competition> Competitions { get; set; }
         public DbSet<Lane> Lanes { get; set; }

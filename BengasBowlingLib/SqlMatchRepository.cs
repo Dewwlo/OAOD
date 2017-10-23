@@ -15,15 +15,21 @@ namespace BengansBowlingLib
         {
             _context = context;
         }
-        public void Create(List<Party> parties, TimePeriod timePeriod, Lane lane)
+        public void Create(List<Player> players, TimePeriod timePeriod, Lane lane)
         {
-            _context.Matches.Add(new Match { Players = parties, TimePeriod = timePeriod, Lane = lane});
+            _context.Matches.Add(new Match { TimePeriod = timePeriod, Lane = lane });
+            _context.SaveChanges();
+            var matchId = _context.Matches.OrderByDescending(o => o.MatchId).FirstOrDefault().MatchId;
+            players.ForEach(p => _context.PlayerMatches.Add(new PlayerMatch {PlayerId = p.PartyId, MatchId = matchId}));
             _context.SaveChanges();
         }
 
-        public void Create(List<Party> parties, TimePeriod timePeriod, Lane lane, Competition competition)
+        public void Create(List<Player> players, TimePeriod timePeriod, Lane lane, Competition competition)
         {
-            _context.Matches.Add(new Match { Players = parties, TimePeriod = timePeriod, Lane = lane, Competition = competition });
+            _context.Matches.Add(new Match { TimePeriod = timePeriod, Lane = lane, Competition = competition });
+            _context.SaveChanges();
+            var matchId = _context.Matches.OrderByDescending(o => o.MatchId).FirstOrDefault().MatchId;
+            players.ForEach(p => _context.PlayerMatches.Add(new PlayerMatch { PlayerId = p.PartyId, MatchId = matchId }));
             _context.SaveChanges();
         }
 
@@ -32,39 +38,34 @@ namespace BengansBowlingLib
             return _context.Matches.ToList();
         }
 
-        public List<Party> GetCompetitors(int matchId)
+        public List<Player> GetCompetitors(int matchId)
         {
-            return _context.Matches.SingleOrDefault(m => m.MatchId == matchId).Players;
+            return _context.PlayerMatches.Where(p => p.MatchId == matchId).Select(p => p.Player).ToList();
         }
 
-        public Party Winner(int matchId)
+        public Player Winner(int matchId)
         {
             return _context.Matches.SingleOrDefault(m => m.MatchId == matchId).MatchWinner;
         }
 
-        public Party YearChampion(int year)
+        public Player YearChampion(int year)
         {
-            var dict = new Dictionary<Party, Tuple<int, int>>();
-            var temp = _context.Matches.Where(m => m.TimePeriod.FromDate.Year == year);
+            var dict = new Dictionary<Player, Tuple<int, int>>();
+            var matches = _context.Matches.Where(m => m.TimePeriod.FromDate.Year == year);
 
-            foreach (var temps in temp)
+            foreach (var match in matches)
             {
-                foreach (var temp1 in temps.Players)
+                foreach (var player in match.Players.Select(p => p.Player))
                 {
-                    if (dict.ContainsKey(temp1))
-                        dict[temp1] = new Tuple<int, int>(dict[temp1].Item1 + 1, dict[temp1].Item2 + (temps.MatchWinner.PartyId == temp1.PartyId ? 1 : 0));
+                    if (dict.ContainsKey(player))
+                        dict[player] = new Tuple<int, int>(dict[player].Item1 + 1, dict[player].Item2 + (match.MatchWinner.PartyId == player.PartyId ? 1 : 0));
                     else
-                        dict.Add(temp1, new Tuple<int, int>(1, temps.MatchWinner.PartyId == temp1.PartyId ? 1 : 0));
+                        dict.Add(player, new Tuple<int, int>(1, match.MatchWinner.PartyId == player.PartyId ? 1 : 0));
                 }
-                //? dict[p] = new Tuple<int, int>(1, temps.MatchWinner.PartyId == p.PartyId ? 1 : 0)
-                //: dict.Add(p, new Tuple<int, int>(1, temps.MatchWinner.PartyId == p.PartyId ? 1 : 0)));
-                //temps.Players.ForEach(p =>
-                //dict.ContainsKey(p)
-                //? dict[p] = new Tuple<int, int>(1, temps.MatchWinner.PartyId == p.PartyId ? 1 : 0)
-                //: dict.Add(p, new Tuple<int, int>(1, temps.MatchWinner.PartyId == p.PartyId ? 1 : 0)));
             }
 
-            return dict.Keys.FirstOrDefault();
+            return dict.Select(d => new {d.Key, percent = d.Value.Item2 / d.Value.Item1})
+                .OrderByDescending(p => p.percent).Select(p => p.Key).FirstOrDefault();
         }
     }
 }

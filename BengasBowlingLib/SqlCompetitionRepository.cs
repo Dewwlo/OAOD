@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AccountabilityLib;
 using BengansBowlingDbLib;
 using BengansBowlingInterfaceLib;
 using BengansBowlingModelsLib;
@@ -21,7 +20,7 @@ namespace BengansBowlingLib
             _context.Competitions.Add(new Competition
             {
                 Name = name,
-                Competitors = new List<Party>(),
+                Competitors = new List<Player>(),
                 Matches = new List<Match>()
             });
             _context.SaveChanges();
@@ -33,13 +32,13 @@ namespace BengansBowlingLib
             {
                 Name = name,
                 WinnerPriceSum = winnerPriceSum,
-                Competitors = new List<Party>(),
+                Competitors = new List<Player>(),
                 Matches = new List<Match>()
             });
             _context.SaveChanges();
         }
 
-        public void AddCompetitor(int competitionId, Party player)
+        public void AddCompetitor(int competitionId, Player player)
         {
             _context.Competitions.SingleOrDefault(c => c.CompetitionId == competitionId).Competitors.Add(player);
             _context.SaveChanges();
@@ -61,12 +60,12 @@ namespace BengansBowlingLib
             return _context.Competitions.ToList();
         }
 
-        public Party Winner(int competitionId)
+        public Player Winner(int competitionId)
         {
             throw new NotImplementedException();
         }
 
-        public List<Party> GetCompetitors(int competitionId)
+        public List<Player> GetCompetitors(int competitionId)
         {
             return _context.Competitions.SingleOrDefault(c => c.CompetitionId == competitionId).Competitors.ToList();
         }

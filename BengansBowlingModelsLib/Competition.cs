@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using AccountabilityLib;
 
 namespace BengansBowlingModelsLib
 {
@@ -11,7 +10,7 @@ namespace BengansBowlingModelsLib
         [Required]
         public string Name { get; set; }
         public decimal WinnerPriceSum { get; set; }
-        public List<Party> Competitors { get; set; }
+        public List<Player> Competitors { get; set; }
         public List<Match> Matches { get; set; }
     }
 }

@@ -1,7 +1,5 @@
 using System;
 using System.Linq;
-using AccountabilityInterfacesLib;
-using AccountabilityLib;
 using BengansBowlingDbLib;
 using BengansBowlingLib;
 using BengansBowlingModelsLib;
@@ -25,7 +23,7 @@ namespace BengansBowlingIntergrationTestsLib
             _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
             _sut = new BowlingManager(
-                new SqlPartyRepository(_context), 
+                new SqlPlayerRepository(_context), 
                 new SqlCompetitionRepository(_context), 
                 new SqlMatchRepository(_context),
                 new SqlTimePeriodRepository(_context),
@@ -35,16 +33,16 @@ namespace BengansBowlingIntergrationTestsLib
         [Fact]
         public void CreatePartiesTest()
         {
-            _sut.CreateParty("Sture Sturesson", "7701012345");
-            _sut.CreateParty("Greger Gregersson", "7801012345");
+            _sut.CreatePlayer("Sture Sturesson", "7701012345");
+            _sut.CreatePlayer("Greger Gregersson", "7801012345");
             Assert.Equal(2, _sut.GetAllParties.Count);
         }
 
         [Fact]
         public void CreateMatchTest()
         {
-            _sut.CreateParty("Sture Sturesson", "7701012345");
-            _sut.CreateParty("Greger Gregersson", "7801012345");
+            _sut.CreatePlayer("Sture Sturesson", "7701012345");
+            _sut.CreatePlayer("Greger Gregersson", "7801012345");
             _sut.CreateTimePeriod(DateTime.Now, DateTime.Now.AddHours(2));
             _sut.CreateMatch(
                 _sut.GetAllParties,
@@ -57,8 +55,8 @@ namespace BengansBowlingIntergrationTestsLib
         [Fact]
         public void CreateCompetitionTest()
         {
-            _sut.CreateParty("Sture Sturesson", "7701012345");
-            _sut.CreateParty("Greger Gregersson", "7801012345");
+            _sut.CreatePlayer("Sture Sturesson", "7701012345");
+            _sut.CreatePlayer("Greger Gregersson", "7801012345");
             _sut.CreateCompetition("Tävling1", 2000M);
             _sut.CreateCompetition("Tävling2");
             _sut.CreateCompetition("Tävling3", 5000M);
@@ -73,8 +71,8 @@ namespace BengansBowlingIntergrationTestsLib
         [Fact]
         public void SetupCompetitionWithMatchesAndCompetitorsTest()
         {
-            _sut.CreateParty("Sture Sturesson", "7701012345");
-            _sut.CreateParty("Greger Gregersson", "7801012345");
+            _sut.CreatePlayer("Sture Sturesson", "7701012345");
+            _sut.CreatePlayer("Greger Gregersson", "7801012345");
             _sut.CreateCompetition("Tävling1", 2000M);
 
             var competitionId = _context.Competitions.FirstOrDefault().CompetitionId;
@@ -102,16 +100,16 @@ namespace BengansBowlingIntergrationTestsLib
         [Fact]
         public void MatchWinnerTest()
         {
-            _sut.CreateParty("Sture Sturesson", "7701012345");
-            _sut.CreateParty("Greger Gregersson", "7801012345");
+            _sut.CreatePlayer("Sture Sturesson", "7701012345");
+            _sut.CreatePlayer("Greger Gregersson", "7801012345");
             _sut.CreateTimePeriod(DateTime.Now, DateTime.Now.AddHours(2));
             _sut.CreateMatch(
                 _sut.GetAllParties,
                 _sut.GetAllTimePeriods().FirstOrDefault(), 
                 new Lane { LaneId = 1, Name = "Bana 1" });
 
-            var playerOne = _context.Parties.FirstOrDefault();
-            var playerTwo = _context.Parties.Skip(1).FirstOrDefault();
+            var playerOne = _context.Players.FirstOrDefault();
+            var playerTwo = _context.Players.Skip(1).FirstOrDefault();
             var match = _context.Matches.FirstOrDefault();
 
             for (int series = 0; series < 3; series++)
@@ -132,9 +130,8 @@ namespace BengansBowlingIntergrationTestsLib
         [Fact]
         public void YearChampionTest()
         {
-   
-            _sut.CreateParty("Sture Sturesson", "7701012345");
-            _sut.CreateParty("Greger Gregersson", "7801012345");
+            _sut.CreatePlayer("Sture Sturesson", "7701012345");
+            _sut.CreatePlayer("Greger Gregersson", "7801012345");
             _sut.CreateTimePeriod(DateTime.Now, DateTime.Now.AddHours(2));
 
             for (int match = 0; match < 3; match++)
@@ -144,8 +141,8 @@ namespace BengansBowlingIntergrationTestsLib
                     _sut.GetAllTimePeriods().FirstOrDefault(),
                     new Lane { LaneId = 1, Name = "Bana 1" });
 
-                var playerOne = _context.Parties.FirstOrDefault();
-                var playerTwo = _context.Parties.Skip(1).FirstOrDefault();
+                var playerOne = _context.Players.FirstOrDefault();
+                var playerTwo = _context.Players.Skip(1).FirstOrDefault();
                 var currentMatch = _context.Matches.OrderByDescending(o => o.MatchId).FirstOrDefault();
 
                 for (int i = 0; i < 3; i++)
@@ -157,13 +154,11 @@ namespace BengansBowlingIntergrationTestsLib
                 for (int i = 0; i < 3; i++)
                 {
                     _sut.CreateSeries(playerTwo, currentMatch);
-                    _sut.AddSeriesScore(_context.Series.OrderByDescending(o => o.SeriesId).FirstOrDefault().SeriesId, 101);
+                    _sut.AddSeriesScore(_context.Series.OrderByDescending(o => o.SeriesId).FirstOrDefault().SeriesId, 103);
                 }
             }
 
-
-
-            Assert.Equal("7701012345", _sut.GetYearChampion(2017).LegalId);
+            Assert.Equal("7801012345", _sut.GetYearChampion(2017).LegalId);
         }
 
         //[Fact]

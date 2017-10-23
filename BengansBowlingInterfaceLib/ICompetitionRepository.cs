@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using AccountabilityLib;
 using BengansBowlingModelsLib;
 
 namespace BengansBowlingInterfaceLib
@@ -8,11 +7,11 @@ namespace BengansBowlingInterfaceLib
     {
         void Create(string name);
         void Create(string name, decimal winnerPriceSum);
-        void AddCompetitor(int competitionId, Party player);
+        void AddCompetitor(int competitionId, Player player);
         void AddMatch(int competitionId ,Match match);
         List<Match> GetMatches(int competitionId);
         List<Competition> All();
-        Party Winner(int competitionId);
-        List<Party> GetCompetitors(int competitionId);
+        Player Winner(int competitionId);
+        List<Player> GetCompetitors(int competitionId);
     }
 }

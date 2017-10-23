@@ -6,11 +6,11 @@ namespace BengansBowlingInterfaceLib
 {
     public interface IMatchRepository
     {
-        void Create(List<Party> parties, TimePeriod timePeriod, Lane lane);
-        void Create(List<Party> parties, TimePeriod timePeriod, Lane lane, Competition competition);
+        void Create(List<Player> players, TimePeriod timePeriod, Lane lane);
+        void Create(List<Player> players, TimePeriod timePeriod, Lane lane, Competition competition);
         List<Match> All();
-        List<Party> GetCompetitors(int matchId);
-        Party Winner(int matchId);
-        Party YearChampion(int year);
+        List<Player> GetCompetitors(int matchId);
+        Player Winner(int matchId);
+        Player YearChampion(int year);
     }
 }
