@@ -7,6 +7,5 @@ namespace BengansBowlingInterfaceLib
     {
         void Create(string name, string legalId);
         List<Player> All();
-        List<Player> Get(string term);
     }
 }

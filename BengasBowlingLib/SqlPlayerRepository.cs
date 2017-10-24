@@ -27,11 +27,5 @@ namespace BengansBowlingLib
         {
             return _context.Players.ToList();
         }
-
-        public List<Player> Get(string term)
-        {
-            throw new NotImplementedException();
-        }
-        
     }
 }
