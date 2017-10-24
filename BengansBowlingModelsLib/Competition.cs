@@ -10,7 +10,7 @@ namespace BengansBowlingModelsLib
         [Required]
         public string Name { get; set; }
         public decimal WinnerPriceSum { get; set; }
-        public List<Player> Competitors { get; set; }
+        public List<PlayerCompetition> Players { get; set; }
         public List<Match> Matches { get; set; }
     }
 }

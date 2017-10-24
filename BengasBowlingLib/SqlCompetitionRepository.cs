@@ -20,7 +20,7 @@ namespace BengansBowlingLib
             _context.Competitions.Add(new Competition
             {
                 Name = name,
-                Competitors = new List<Player>(),
+                Players = new List<PlayerCompetition>(),
                 Matches = new List<Match>()
             });
             _context.SaveChanges();
@@ -32,7 +32,7 @@ namespace BengansBowlingLib
             {
                 Name = name,
                 WinnerPriceSum = winnerPriceSum,
-                Competitors = new List<Player>(),
+                Players = new List<PlayerCompetition>(),
                 Matches = new List<Match>()
             });
             _context.SaveChanges();
@@ -40,7 +40,11 @@ namespace BengansBowlingLib
 
         public void AddCompetitor(int competitionId, Player player)
         {
-            _context.Competitions.SingleOrDefault(c => c.CompetitionId == competitionId).Competitors.Add(player);
+            _context.PlayerCompetitions.Add(new PlayerCompetition
+            {
+                Player = player,
+                Competition = _context.Competitions.SingleOrDefault(c => c.CompetitionId == competitionId)
+            });
             _context.SaveChanges();
         }
 
@@ -67,7 +71,7 @@ namespace BengansBowlingLib
 
         public List<Player> GetCompetitors(int competitionId)
         {
-            return _context.Competitions.SingleOrDefault(c => c.CompetitionId == competitionId).Competitors.ToList();
+            return _context.PlayerCompetitions.Where(pm => pm.CompetitionId == competitionId).Select(p => p.Player).ToList();
         }
     }
 }

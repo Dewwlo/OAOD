@@ -6,5 +6,6 @@ namespace BengansBowlingModelsLib
     public class Player : Party
     {
         public List<PlayerMatch> Matches { get; set; }
+        public List<PlayerCompetition> Competitions { get; set; }
     }
 }
