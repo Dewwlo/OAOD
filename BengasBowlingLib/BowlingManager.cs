@@ -71,8 +71,7 @@ namespace BengansBowlingLib
 
         public Player GetMatchWinner(int matchId) => _matchRepository.Winner(matchId);
 
-        public int GetSeriesScore(int[,] array) => _seriesRepository.CalculateSeriesScore(array);
-
+        public int GetSeriesScore(int [,] scoreArray = null, int[,] frameTen = null) => _seriesRepository.CalculateSeriesScore(scoreArray, frameTen);
         public Player GetYearChampion(int year) => _matchRepository.YearChampion(year);
     }
 }

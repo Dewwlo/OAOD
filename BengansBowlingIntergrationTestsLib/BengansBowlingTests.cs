@@ -27,7 +27,7 @@ namespace BengansBowlingIntergrationTestsLib
                 new SqlCompetitionRepository(_context), 
                 new SqlMatchRepository(_context),
                 new SqlTimePeriodRepository(_context),
-                new SqlSeriesRepository(_context));
+                new SqlSeriesRepository(_context, new FrameState()));
         }
 
         [Fact]
@@ -161,12 +161,22 @@ namespace BengansBowlingIntergrationTestsLib
             Assert.Equal("7801012345", _sut.GetYearChampion(2017).LegalId);
         }
 
-        //[Fact]
-        //public void SeriesTests()
-        //{
-        //    var array = new [,]{{10, 0}, {6, 4}, {3, 5}, {10, 0}, {10, 0}, {2, 0}, {5, 3}, {7,3}, {8, 2}, {10, 0}, {10, 0}, { 10, 0 } };
-        //    var score = _sut.GetSeriesScore(array);
-        //    Assert.Equal(153, score);
-        //}
+        [Fact]
+        public void GetSeriesScoreTests()
+        {
+            var array = new[,] { { 10, 0 }, { 6, 4 }, { 3, 5 }, { 10, 0 }, { 10, 0 }, { 2, 0 }, { 5, 3 }, { 7, 3 }, { 8, 2 } };
+            var frameTen = new[,] { { 4, 6, 10 } };
+            var score = _sut.GetSeriesScore(array, frameTen);
+            Assert.Equal(137, score);
+        }
+
+        [Fact]
+        public void GetSeriesMaxScoreTests()
+        {
+            var array = new[,] { { 10, 0 }, { 10, 0 }, { 10, 0 }, { 10, 0 }, { 10, 0 }, { 10, 0 }, { 10, 0 }, { 10, 0 }, { 10, 0 } };
+            var frameTen = new[,] { { 10, 10, 10 } };
+            var score = _sut.GetSeriesScore(array, frameTen);
+            Assert.Equal(300, score);
+        }
     }
 }

@@ -10,9 +10,11 @@ namespace BengansBowlingLib
     public class SqlSeriesRepository : ISeriesRepository
     {
         private readonly BengansBowlingContext _context;
-        public SqlSeriesRepository(BengansBowlingContext context)
+        private readonly FrameState _frameState;
+        public SqlSeriesRepository(BengansBowlingContext context, FrameState frameState)
         {
             _context = context;
+            _frameState = frameState;
         }
         public void Create(Player player, Match match)
         {
@@ -36,76 +38,79 @@ namespace BengansBowlingLib
             _context.SaveChanges();
         }
 
-        // Incomplete
-        public int CalculateSeriesScore(int[,] array)
+        public int CalculateSeriesScore(int[,] scoreArray = null, int[,] frameTen = null)
         {
-            var seriesScore = new int[12];
-            var lastFrame = "";
-            var secondLastFrame = "";
+            var seriesScore = new int[10];
+            var generate = scoreArray == null && frameTen == null;
 
-            for (int frame = 0; frame <= 11; frame++)
+            for (int frame = 0; frame < 10; frame++)
             {
-                //var frameScore = new [,]{{10,0}};
-                //var frameScore = GenerateFrameScore();
-                var frameScore = new [,]{{ array[frame,0], array[frame,1]}};
                 if (frame < 9)
                 {
-                    seriesScore[frame] = frameScore[0, 0] + frameScore[0, 1];
+                    var score = generate ? GenerateFrameScore() : new [,] {{scoreArray[frame, 0], scoreArray[frame, 1]}};
+                    SetFrameState(score);
+                    seriesScore[frame] = score.Cast<int>().Sum();
+
+                    if (_frameState.PreviousThrow == "Strike")
+                        seriesScore[frame - 1] += score.Cast<int>().Sum();
+                    if (_frameState.SecondPreviousThrow == "Strike" && _frameState.PreviousThrow == "Strike")
+                        seriesScore[frame - 2] += score[0, 0];
+                    if (_frameState.PreviousThrow == "Spare")
+                        seriesScore[frame - 1] += score[0, 0];
                 }
                 else
                 {
-                    if (frameScore[0, 0] == 10)
-                        seriesScore[frame] = 10;
-                    else if (frameScore[0, 0] + frameScore[0, 1] == 10 && frame != 11)
-                    {
-                        seriesScore[frame] = frameScore[0, 0] + frameScore[0, 1];
-                        //frame += 1;
-                        //seriesScore[frame] = frameScore[0, 1];
-                    }
-                    else if (frame == 10)
-                        seriesScore[frame] = frameScore[0, 0];
-                    else
-                        frame = 12;
+                    var score = generate ? GenerateFrameScoreTen() : new[,] {{ frameTen[0, 0], frameTen[0, 1], frameTen[0, 2]}};
+                    seriesScore[frame] += score.Cast<int>().Sum();
+
+                    if (_frameState.PreviousThrow == "Strike")
+                        seriesScore[frame - 1] += score[0, 0] + score[0, 1];
+                    if (_frameState.SecondPreviousThrow == "Strike" && _frameState.PreviousThrow == "Strike")
+                        seriesScore[frame - 2] += score[0, 0];
+                    if (_frameState.PreviousThrow == "Spare")
+                        seriesScore[frame - 1] += score[0, 0];
                 }
-
-                if (frame < 9)
-                {
-                    switch (lastFrame)
-                    {
-                        case "strike":
-                            seriesScore[frame - 1] += frameScore[0, 0] + frameScore[0, 1];
-                            break;
-                        case "spare":
-                            seriesScore[frame - 1] += frameScore[0, 0];
-                            break;
-                    }
-                }
-
-                if (secondLastFrame == "strike" && lastFrame == "strike")
-                    seriesScore[frame - 2] += frameScore[0, 0];
-
-                secondLastFrame = lastFrame;
-
-                if (frameScore[0, 0] == 10)
-                    lastFrame = "strike";
-                else if (frameScore[0, 0] + frameScore[0, 1] == 10)
-                    lastFrame = "spare";
-                else
-                    lastFrame = "normal";
             }
 
             return seriesScore.Sum();
         }
 
+        public void SetFrameState(int[,] frame)
+        {
+            if (frame[0, 0] == 10)
+                _frameState.CurrentThrow = "Strike";
+            else
+                _frameState.CurrentThrow = frame.Cast<int>().Sum() == 10 ? "Spare" : "None";
+        }
+
         public int[,] GenerateFrameScore()
         {
-            var frameScore = new int[1,2];
+            var frameScore = new int[1, 2];
             frameScore[0, 0] = new Random().Next(0, 11);
 
-            if (frameScore[0, 0] < 10)
-                frameScore[0, 1] = new Random().Next(0, 11 - frameScore[0, 0]);
-            else
+            if (frameScore[0, 0] == 10)
                 frameScore[0, 1] = 0;
+            else
+                frameScore[0, 1] += new Random().Next(0, 11 - frameScore[0, 0]);
+
+            return frameScore;
+        }
+
+        public int[,] GenerateFrameScoreTen()
+        {
+            var frameScore = new int[1, 3];
+            frameScore[0, 0] = new Random().Next(0, 11);
+
+            if (frameScore[0, 0] == 10)
+            {
+                frameScore[0, 1] = new Random().Next(0, 11);
+                frameScore[0, 2] = frameScore[0, 1] == 10 ? new Random().Next(0, 11) : new Random().Next(0, 11 - frameScore[0, 1]);
+            }
+            else
+            {
+                frameScore[0, 1] += new Random().Next(0, 11 - frameScore[0, 0]);
+                frameScore[0, 2] += frameScore.Cast<int>().Sum() == 10 ? new Random().Next(0, 11) : 0;
+            }
 
             return frameScore;
         }
