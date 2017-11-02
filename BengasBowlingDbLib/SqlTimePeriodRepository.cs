@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using AccountabilityInterfacesLib;
 using AccountabilityLib;
-using BengansBowlingDbLib;
 
-namespace BengansBowlingLib
+namespace BengansBowlingDbLib
 {
     public class SqlTimePeriodRepository : ITimePeriodRepository
     {

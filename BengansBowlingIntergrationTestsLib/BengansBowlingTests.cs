@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using BengansBowlingDbLib;
+using BengansBowlingDbLib.FrameMemento;
 using BengansBowlingLib;
 using BengansBowlingModelsLib;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,7 @@ namespace BengansBowlingIntergrationTestsLib
         public BengansBowlingTests()
         {
             var optionsBuilder = new DbContextOptionsBuilder<BengansBowlingContext>();
-            optionsBuilder.UseInMemoryDatabase(Guid.NewGuid().ToString());
+            optionsBuilder.UseInMemoryDatabase("TestDatabase");
             //optionsBuilder.UseSqlServer(
             //    "Server=(localdb)\\mssqllocaldb;Database=BengansBowling;Trusted_Connection=True;MultipleActiveResultSets=True");
             _context = new BengansBowlingContext(optionsBuilder.Options);

@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BengansBowlingInterfaceLib\BengansBowlingInterfaceLib.csproj" />
     <ProjectReference Include="..\BengansBowlingModelsLib\BengansBowlingModelsLib.csproj" />
   </ItemGroup>
 

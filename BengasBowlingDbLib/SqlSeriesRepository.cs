@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BengansBowlingDbLib;
+using BengansBowlingDbLib.FrameMemento;
 using BengansBowlingInterfaceLib;
 using BengansBowlingModelsLib;
 
-namespace BengansBowlingLib
+namespace BengansBowlingDbLib
 {
     public class SqlSeriesRepository : ISeriesRepository
     {

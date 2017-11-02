@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BengansBowlingDbLib;
+using BengansBowlingDbLib.AbstractCompetitionFactory;
 using BengansBowlingInterfaceLib;
-using BengansBowlingInterfaceLib.AbstractFactory;
 using BengansBowlingModelsLib;
 
-namespace BengansBowlingLib
+namespace BengansBowlingDbLib
 {
     public class SqlCompetitionRepository : ICompetitionRepository
     {

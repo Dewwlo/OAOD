@@ -5,8 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AccountabilityInterfacesLib\AccountabilityInterfacesLib.csproj" />
-    <ProjectReference Include="..\BengansBowlingInterfaceLib\BengansBowlingInterfaceLib.csproj" />
     <ProjectReference Include="..\BengasBowlingDbLib\BengansBowlingDbLib.csproj" />
   </ItemGroup>
 

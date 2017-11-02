@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using BengansBowlingInterfaceLib;
 
-namespace BengansBowlingInterfaceLib.AbstractFactory
+namespace BengansBowlingDbLib.AbstractCompetitionFactory
 {
     public class GroupCompetitionFactory : AbsctractCompetitionFactory
     {

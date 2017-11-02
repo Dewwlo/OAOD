@@ -10,7 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AccountabilityInterfacesLib\AccountabilityInterfacesLib.csproj" />
     <ProjectReference Include="..\AccountabilityLib\AccountabilityLib.csproj" />
+    <ProjectReference Include="..\BengansBowlingInterfaceLib\BengansBowlingInterfaceLib.csproj" />
     <ProjectReference Include="..\BengansBowlingModelsLib\BengansBowlingModelsLib.csproj" />
   </ItemGroup>
 

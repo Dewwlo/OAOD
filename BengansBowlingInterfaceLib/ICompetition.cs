@@ -1,4 +1,4 @@
-﻿namespace BengansBowlingInterfaceLib.AbstractFactory
+﻿namespace BengansBowlingInterfaceLib
 {
     public interface ICompetition
     {

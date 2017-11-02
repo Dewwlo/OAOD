@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BengansBowlingDbLib;
 using BengansBowlingInterfaceLib;
 using BengansBowlingModelsLib;
 
-namespace BengansBowlingLib
+namespace BengansBowlingDbLib
 {
     public class SqlPlayerRepository : IPlayerRepository
     {

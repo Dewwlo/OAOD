@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using AccountabilityLib;
-using BengansBowlingDbLib;
 using BengansBowlingInterfaceLib;
 using BengansBowlingModelsLib;
 
-namespace BengansBowlingLib
+namespace BengansBowlingDbLib
 {
     public class SqlMatchRepository : IMatchRepository
     {
