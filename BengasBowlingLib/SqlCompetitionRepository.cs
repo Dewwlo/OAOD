@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BengansBowlingDbLib;
 using BengansBowlingInterfaceLib;
+using BengansBowlingInterfaceLib.AbstractFactory;
 using BengansBowlingModelsLib;
 
 namespace BengansBowlingLib
@@ -15,25 +16,39 @@ namespace BengansBowlingLib
             _context = context;
         }
 
-        public void Create(string name)
+        public void Create(string name, string type)
         {
+            AbsctractCompetitionFactory factory = null;
+            if (type == "knockout")
+                factory = new KnockoutCompetitionFactory();
+            else
+                factory = new GroupCompetitionFactory();
+
+            var competition = factory.CreateCompetition();
             _context.Competitions.Add(new Competition
             {
                 Name = name,
-                Players = new List<PlayerCompetition>(),
-                Matches = new List<Match>()
+                GameMode = competition.GameMode,
+                Rules = competition.Rules
             });
             _context.SaveChanges();
         }
 
-        public void Create(string name, decimal winnerPriceSum)
+        public void Create(string name, string type, decimal winnerPriceSum)
         {
+            AbsctractCompetitionFactory factory = null;
+            if (type == "knockout")
+                factory = new KnockoutCompetitionFactory();
+            else
+                factory = new GroupCompetitionFactory();
+
+            var competition = factory.CreateCompetition();
             _context.Competitions.Add(new Competition
             {
                 Name = name,
-                WinnerPriceSum = winnerPriceSum,
-                Players = new List<PlayerCompetition>(),
-                Matches = new List<Match>()
+                GameMode = competition.GameMode,
+                Rules = competition.Rules,
+                WinnerPriceSum = winnerPriceSum
             });
             _context.SaveChanges();
         }

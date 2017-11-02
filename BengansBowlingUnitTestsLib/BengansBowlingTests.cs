@@ -11,15 +11,12 @@ namespace BengansBowlingUnitTestsLib
         [Fact]
         public void MatchWinnerTest()
         {
-            var playerOne = new Player {Name = "Sture Sturesson", LegalId = "7701012345", Series = new List<Series>()};
-            var playerTwo = new Player {Name = "Greger Gregersson", LegalId = "7801012345", Series = new List<Series>()};
+            var playerOne = new Player {Name = "Sture Sturesson", LegalId = "7701012345"};
+            var playerTwo = new Player {Name = "Greger Gregersson", LegalId = "7801012345"};
 
-            var match = new Match {MatchId = 1, Series = new List<Series>()};
-            match.Players = new List<PlayerMatch>
-            {
-                new PlayerMatch {Player = playerOne, Match = match},
-                new PlayerMatch {Player = playerTwo, Match = match}
-            };
+            var match = new Match {MatchId = 1};
+            match.Players.Add(new PlayerMatch { Player = playerOne, Match = match });
+            match.Players.Add(new PlayerMatch { Player = playerTwo, Match = match });
 
             for (int series = 0; series < 3; series++)
             {

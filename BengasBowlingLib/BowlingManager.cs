@@ -33,12 +33,12 @@ namespace BengansBowlingLib
 
         public List<Player> GetAllParties => _playerRepository.All();
 
-        public void CreateCompetition(string name, decimal? winnerPriceSum  = null)
+        public void CreateCompetition(string name, string type, decimal? winnerPriceSum  = null)
         {
             if (winnerPriceSum == null)
-                _competitionRepository.Create(name);
+                _competitionRepository.Create(name, type);
             else
-                _competitionRepository.Create(name, (decimal)winnerPriceSum);
+                _competitionRepository.Create(name, type, (decimal)winnerPriceSum);
         }
 
         public void AddPlayerToCompetition(int competitionId, Player player) => _competitionRepository.AddCompetitor(competitionId, player);

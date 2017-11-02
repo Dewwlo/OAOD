@@ -49,11 +49,13 @@ namespace BengansBowlingIntergrationTestsLib
         {
             _sut.CreatePlayer("Sture Sturesson", "7701012345");
             _sut.CreatePlayer("Greger Gregersson", "7801012345");
-            _sut.CreateCompetition("Tävling1", 2000M);
-            _sut.CreateCompetition("Tävling2");
-            _sut.CreateCompetition("Tävling3", 5000M);
+            _sut.CreateCompetition("Tävling1", "knockout", 2000M);
+            _sut.CreateCompetition("Tävling2", "group");
+            _sut.CreateCompetition("Tävling3", "group", 5000M);
             _sut.GetAllParties.ForEach(p => _sut.AddPlayerToCompetition(_context.Competitions.FirstOrDefault().CompetitionId, p));
 
+            Assert.Equal("some rules", _context.Competitions.FirstOrDefault().Rules);
+            Assert.Equal("Winner will advance to next round", _context.Competitions.FirstOrDefault().GameMode);
             Assert.Equal(3, _sut.GetAllCompetitions().Count);
             Assert.Equal(2, _sut.GetAllCompetitionCompetitors(_context.Competitions.FirstOrDefault().CompetitionId).Count);
             Assert.Equal(0, _sut.GetAllCompetitionCompetitors(_context.Competitions.OrderByDescending(c => c.CompetitionId).FirstOrDefault().CompetitionId).Count);
@@ -65,7 +67,7 @@ namespace BengansBowlingIntergrationTestsLib
         {
             _sut.CreatePlayer("Sture Sturesson", "7701012345");
             _sut.CreatePlayer("Greger Gregersson", "7801012345");
-            _sut.CreateCompetition("Tävling1", 2000M);
+            _sut.CreateCompetition("Tävling1", "knockout", 2000M);
 
             var competitionId = _context.Competitions.FirstOrDefault().CompetitionId;
             _sut.GetAllParties.ForEach(p => _sut.AddPlayerToCompetition(competitionId, p));
