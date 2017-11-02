@@ -31,14 +31,6 @@ namespace BengansBowlingIntergrationTestsLib
         }
 
         [Fact]
-        public void CreatePartiesTest()
-        {
-            _sut.CreatePlayer("Sture Sturesson", "7701012345");
-            _sut.CreatePlayer("Greger Gregersson", "7801012345");
-            Assert.Equal(2, _sut.GetAllParties.Count);
-        }
-
-        [Fact]
         public void CreateMatchTest()
         {
             _sut.CreatePlayer("Sture Sturesson", "7701012345");
@@ -116,10 +108,6 @@ namespace BengansBowlingIntergrationTestsLib
             {
                 _sut.CreateSeries(playerOne, match);
                 _sut.AddSeriesScore(_context.Series.OrderByDescending(o => o.SeriesId).FirstOrDefault().SeriesId, 100);
-            }
-
-            for (int series = 0; series < 3; series++)
-            {
                 _sut.CreateSeries(playerTwo, match);
                 _sut.AddSeriesScore(_context.Series.OrderByDescending(o => o.SeriesId).FirstOrDefault().SeriesId, 101);
             }
@@ -149,10 +137,6 @@ namespace BengansBowlingIntergrationTestsLib
                 {
                     _sut.CreateSeries(playerOne, currentMatch);
                     _sut.AddSeriesScore(_context.Series.OrderByDescending(o => o.SeriesId).FirstOrDefault().SeriesId, 102);
-                }
-
-                for (int i = 0; i < 3; i++)
-                {
                     _sut.CreateSeries(playerTwo, currentMatch);
                     _sut.AddSeriesScore(_context.Series.OrderByDescending(o => o.SeriesId).FirstOrDefault().SeriesId, 103);
                 }

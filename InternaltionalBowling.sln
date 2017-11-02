@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.15
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BengansBowling", "BengansBowling", "{D89C404D-C8B9-4505-BAE6-236FD798E920}"
 EndProject
@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BengansBowlingModelsLib", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BengansBowlingIntergrationTestsLib", "BengansBowlingIntergrationTestsLib\BengansBowlingIntergrationTestsLib.csproj", "{DCF8815A-BB42-44F0-9F18-708A7D20450E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BengansBowlingUnitTestsLib", "BengansBowlingUnitTestsLib\BengansBowlingUnitTestsLib.csproj", "{A3CCB0D5-278D-4867-9F2A-F612763A07EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BengansBowlingUnitTestsLib", "BengansBowlingUnitTestsLib\BengansBowlingUnitTestsLib.csproj", "{A3CCB0D5-278D-4867-9F2A-F612763A07EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +73,7 @@ Global
 		{F5E393FD-1707-4CD3-BEE4-C003FEB271C7} = {D89C404D-C8B9-4505-BAE6-236FD798E920}
 		{2353045E-DA29-4832-BD3B-2ED06B29CE5B} = {D89C404D-C8B9-4505-BAE6-236FD798E920}
 		{DCF8815A-BB42-44F0-9F18-708A7D20450E} = {D89C404D-C8B9-4505-BAE6-236FD798E920}
+		{A3CCB0D5-278D-4867-9F2A-F612763A07EC} = {D89C404D-C8B9-4505-BAE6-236FD798E920}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C2E60325-07C7-4CE7-BB55-FE06AF343962}

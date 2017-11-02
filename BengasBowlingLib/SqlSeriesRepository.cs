@@ -41,35 +41,28 @@ namespace BengansBowlingLib
         public int CalculateSeriesScore(int[,] scoreArray = null, int[,] frameTen = null)
         {
             var seriesScore = new int[10];
-            var generate = scoreArray == null && frameTen == null;
+            var generate = scoreArray == null || frameTen == null;
 
             for (int frame = 0; frame < 10; frame++)
             {
+                var score = new int[1,2];
                 if (frame < 9)
-                {
-                    var score = generate ? GenerateFrameScore() : new [,] {{scoreArray[frame, 0], scoreArray[frame, 1]}};
-                    SetFrameState(score);
-                    seriesScore[frame] = score.Cast<int>().Sum();
-
-                    if (_frameState.PreviousThrow == "Strike")
-                        seriesScore[frame - 1] += score.Cast<int>().Sum();
-                    if (_frameState.SecondPreviousThrow == "Strike" && _frameState.PreviousThrow == "Strike")
-                        seriesScore[frame - 2] += score[0, 0];
-                    if (_frameState.PreviousThrow == "Spare")
-                        seriesScore[frame - 1] += score[0, 0];
-                }
+                    score = generate ? GenerateFrameScore() : new [,] {{scoreArray[frame, 0], scoreArray[frame, 1]}};
                 else
-                {
-                    var score = generate ? GenerateFrameScoreTen() : new[,] {{ frameTen[0, 0], frameTen[0, 1], frameTen[0, 2]}};
-                    seriesScore[frame] += score.Cast<int>().Sum();
+                    score = generate ? GenerateFrameScoreTen() : new[,] {{ frameTen[0, 0], frameTen[0, 1], frameTen[0, 2]}};
 
-                    if (_frameState.PreviousThrow == "Strike")
-                        seriesScore[frame - 1] += score[0, 0] + score[0, 1];
-                    if (_frameState.SecondPreviousThrow == "Strike" && _frameState.PreviousThrow == "Strike")
+                SetFrameState(score);
+                seriesScore[frame] += score.Cast<int>().Sum();
+
+                if (_frameState.PreviousThrow == "Strike")
+                {
+                    seriesScore[frame - 1] += score[0, 0] + score[0, 1];
+
+                    if (_frameState.SecondPreviousThrow == "Strike")
                         seriesScore[frame - 2] += score[0, 0];
-                    if (_frameState.PreviousThrow == "Spare")
-                        seriesScore[frame - 1] += score[0, 0];
                 }
+                if (_frameState.PreviousThrow == "Spare")
+                    seriesScore[frame - 1] += score[0, 0];
             }
 
             return seriesScore.Sum();
