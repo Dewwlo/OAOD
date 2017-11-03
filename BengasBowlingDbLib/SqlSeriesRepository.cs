@@ -61,6 +61,7 @@ namespace BengansBowlingDbLib
                     if (_frameState.SecondPreviousThrow == "Strike")
                         seriesScore[frame - 2] += score[0, 0];
                 }
+
                 if (_frameState.PreviousThrow == "Spare")
                     seriesScore[frame - 1] += score[0, 0];
             }
