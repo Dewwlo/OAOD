@@ -14,19 +14,22 @@ namespace BengansBowlingLib
         private readonly IMatchRepository _matchRepository;
         private readonly ITimePeriodRepository _timePeriodRepository;
         private readonly ISeriesRepository _seriesRepository;
+        private readonly ILaneRepository _laneRepository;
 
         public BowlingManager(
             IPlayerRepository playerRepository, 
             ICompetitionRepository competitionRepository, 
             IMatchRepository matchRepository,
             ITimePeriodRepository timePeriodRepository,
-            ISeriesRepository seriesRepository)
+            ISeriesRepository seriesRepository,
+            ILaneRepository laneRepository)
         {
             _playerRepository = playerRepository;
             _competitionRepository = competitionRepository;
             _matchRepository = matchRepository;
             _timePeriodRepository = timePeriodRepository;
             _seriesRepository = seriesRepository;
+            _laneRepository = laneRepository;
         }
 
         public void CreatePlayer(string name, string legalId) => _playerRepository.Create(name, legalId);
@@ -72,6 +75,11 @@ namespace BengansBowlingLib
         public Player GetMatchWinner(int matchId) => _matchRepository.Winner(matchId);
 
         public int GetSeriesScore(int [,] scoreArray = null, int[,] frameTen = null) => _seriesRepository.CalculateSeriesScore(scoreArray, frameTen);
+
         public Player GetYearChampion(int year) => _matchRepository.YearChampion(year);
+
+        public void CreateLane(string name) => _laneRepository.Create(name);
+
+        public List<Lane> GetAllLanes() => _laneRepository.GetAll();
     }
 }

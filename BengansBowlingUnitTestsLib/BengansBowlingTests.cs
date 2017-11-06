@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using AccountabilityLib;
+using BengansBowlingLib;
 using BengansBowlingModelsLib;
 using Xunit;
 
@@ -8,27 +10,32 @@ namespace BengansBowlingUnitTestsLib
 {
     public class BengansBowlingTests
     {
+        private readonly BowlingManager _sut;
+
+        public BengansBowlingTests()
+        {
+            _sut = new BowlingManager(
+                new FakePlayerRepository(),
+                new FakeCompetitionRepository(),
+                new FakeMatchRepository(),
+                new FakeTimePeriodRepository(),
+                new FakeSeriesRepository(),
+                new FakeLaneRepository());
+        }
+
         [Fact]
         public void MatchWinnerTest()
         {
-            var playerOne = new Player {Name = "Sture Sturesson", LegalId = "7701012345"};
-            var playerTwo = new Player {Name = "Greger Gregersson", LegalId = "7801012345"};
+            _sut.CreatePlayer("Sture Sturesson", "7701012345");
+            _sut.CreatePlayer("Greger Gregersson", "7801012345");
+            _sut.CreateLane("Bana 1");
+            _sut.CreateTimePeriod(new DateTime(2017, 6, 20, 16, 0, 0), new DateTime(2017, 6, 20, 18, 0, 0));
+            _sut.CreateMatch(
+                _sut.GetAllParties,
+                _sut.GetAllTimePeriods().FirstOrDefault(),
+                _sut.GetAllLanes().FirstOrDefault());
 
-            var match = new Match {MatchId = 1};
-            match.Players.Add(new PlayerMatch { Player = playerOne, Match = match });
-            match.Players.Add(new PlayerMatch { Player = playerTwo, Match = match });
-
-            for (int series = 0; series < 3; series++)
-            {
-                var seriesPlayerOne = new Series {Score = 100, Player = playerOne, Match = match};
-                var seriesPlayerTwo = new Series {Score = 120, Player = playerTwo, Match = match};
-                match.Series.Add(seriesPlayerOne);
-                match.Series.Add(seriesPlayerTwo);
-                playerOne.Series.Add(seriesPlayerOne);
-                playerTwo.Series.Add(seriesPlayerTwo);
-            }
-            
-            Assert.Equal("7801012345", match.MatchWinner.LegalId);
+            Assert.Equal(2, _sut.GetMatchCompetitors(_sut.GetAllMatches().FirstOrDefault().MatchId).Count);
         }
     }
 }

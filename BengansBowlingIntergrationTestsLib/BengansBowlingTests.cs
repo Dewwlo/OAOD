@@ -28,7 +28,8 @@ namespace BengansBowlingIntergrationTestsLib
                 new SqlCompetitionRepository(_context), 
                 new SqlMatchRepository(_context),
                 new SqlTimePeriodRepository(_context),
-                new SqlSeriesRepository(_context, new FrameState()));
+                new SqlSeriesRepository(_context, new FrameState()),
+                new SqlLaneRepository(_context));
         }
 
         [Fact]
@@ -36,13 +37,14 @@ namespace BengansBowlingIntergrationTestsLib
         {
             _sut.CreatePlayer("Sture Sturesson", "7701012345");
             _sut.CreatePlayer("Greger Gregersson", "7801012345");
-            _sut.CreateTimePeriod(DateTime.Now, DateTime.Now.AddHours(2));
+            _sut.CreateLane("Bana 1");
+            _sut.CreateTimePeriod(new DateTime(2017, 6, 20, 16, 0, 0), new DateTime(2017, 6, 20, 18, 0, 0));
             _sut.CreateMatch(
                 _sut.GetAllParties,
                 _sut.GetAllTimePeriods().FirstOrDefault(), 
-                new Lane { LaneId = 1, Name = "Bana 1" });
+                _sut.GetAllLanes().FirstOrDefault());
 
-            Assert.Equal(2, _sut.GetMatchCompetitors(_context.Matches.FirstOrDefaultAsync().Id).Count);
+            Assert.Equal(2, _sut.GetMatchCompetitors(_context.Matches.FirstOrDefault().MatchId).Count);
         }
 
         [Fact]
@@ -69,20 +71,21 @@ namespace BengansBowlingIntergrationTestsLib
             _sut.CreatePlayer("Sture Sturesson", "7701012345");
             _sut.CreatePlayer("Greger Gregersson", "7801012345");
             _sut.CreateCompetition("Tävling1", "knockout", 2000M);
+            _sut.CreateLane("Bana 1");
 
             var competitionId = _context.Competitions.FirstOrDefault().CompetitionId;
             _sut.GetAllParties.ForEach(p => _sut.AddPlayerToCompetition(competitionId, p));
-            _sut.CreateTimePeriod(DateTime.Now, DateTime.Now.AddHours(2));
-            _sut.CreateTimePeriod(DateTime.Now.AddHours(2), DateTime.Now.AddHours(4));
+            _sut.CreateTimePeriod(new DateTime(2017, 6, 20, 16, 0, 0), new DateTime(2017, 6, 20, 18, 0, 0));
+            _sut.CreateTimePeriod(new DateTime(2017, 6, 20, 18, 0, 0), new DateTime(2017, 6, 20, 20, 0, 0));
 
             _sut.CreateMatch(
                 _sut.GetAllParties,
                 _sut.GetAllTimePeriods().FirstOrDefault(),
-                new Lane { LaneId = 1, Name = "Bana 1" });
+                _sut.GetAllLanes().FirstOrDefault());
             _sut.CreateMatch(
                 _sut.GetAllParties,
                 _sut.GetAllTimePeriods().FirstOrDefault(),
-                new Lane { LaneId = 2, Name = "Bana 2" },
+                _sut.GetAllLanes().FirstOrDefault(),
                 _context.Competitions.FirstOrDefault());
             _sut.AddMatchToCompetition(competitionId, _sut.GetAllMatches().FirstOrDefault());
 
@@ -97,11 +100,13 @@ namespace BengansBowlingIntergrationTestsLib
         {
             _sut.CreatePlayer("Sture Sturesson", "7701012345");
             _sut.CreatePlayer("Greger Gregersson", "7801012345");
-            _sut.CreateTimePeriod(DateTime.Now, DateTime.Now.AddHours(2));
+            _sut.CreateLane("Bana 1");
+
+            _sut.CreateTimePeriod(new DateTime(2017, 6, 20, 16, 0, 0), new DateTime(2017, 6, 20, 18, 0, 0));
             _sut.CreateMatch(
                 _sut.GetAllParties,
-                _sut.GetAllTimePeriods().FirstOrDefault(), 
-                new Lane { LaneId = 1, Name = "Bana 1" });
+                _sut.GetAllTimePeriods().FirstOrDefault(),
+                _sut.GetAllLanes().FirstOrDefault());
 
             var playerOne = _context.Players.FirstOrDefault();
             var playerTwo = _context.Players.Skip(1).FirstOrDefault();
@@ -123,14 +128,15 @@ namespace BengansBowlingIntergrationTestsLib
         {
             _sut.CreatePlayer("Sture Sturesson", "7701012345");
             _sut.CreatePlayer("Greger Gregersson", "7801012345");
-            _sut.CreateTimePeriod(DateTime.Now, DateTime.Now.AddHours(2));
+            _sut.CreateTimePeriod(new DateTime(2017, 6, 20, 16, 0, 0), new DateTime(2017, 6, 20, 18, 0, 0));
+            _sut.CreateLane("Bana 1");
 
             for (int match = 0; match < 3; match++)
             {
                 _sut.CreateMatch(
                     _sut.GetAllParties,
                     _sut.GetAllTimePeriods().FirstOrDefault(),
-                    new Lane { LaneId = 1, Name = "Bana 1" });
+                    _sut.GetAllLanes().FirstOrDefault());
 
                 var playerOne = _context.Players.FirstOrDefault();
                 var playerTwo = _context.Players.Skip(1).FirstOrDefault();

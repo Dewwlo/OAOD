@@ -11,7 +11,7 @@ namespace BengansBowlingModelsLib
         public int MatchId { get; set; }
         public List<PlayerMatch> Players { get; set; } = new List<PlayerMatch>();
         public List<Series> Series { get; set; } = new List<Series>();
-        public int CompetitionId { get; set; }
+        //public int CompetitionId { get; set; }
         public Competition Competition { get; set; }
         [Required]
         public int LaneId { get; set; }

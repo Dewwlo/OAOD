@@ -8,14 +8,16 @@ namespace BengansBowlingUnitTestsLib
 {
     public class FakePlayerRepository : IPlayerRepository
     {
+        private readonly List<Player> _playerList = new List<Player>();
+
         public void Create(string name, string legalId)
         {
-            throw new NotImplementedException();
+            _playerList.Add(new Player{Name = name, LegalId = legalId});
         }
 
         public List<Player> All()
         {
-            throw new NotImplementedException();
+            return _playerList;
         }
     }
 }
