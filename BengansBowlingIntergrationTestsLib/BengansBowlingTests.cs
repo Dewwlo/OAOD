@@ -17,9 +17,9 @@ namespace BengansBowlingIntergrationTestsLib
         public BengansBowlingTests()
         {
             var optionsBuilder = new DbContextOptionsBuilder<BengansBowlingContext>();
-            optionsBuilder.UseInMemoryDatabase("TestDatabase");
-            //optionsBuilder.UseSqlServer(
-            //    "Server=(localdb)\\mssqllocaldb;Database=BengansBowling;Trusted_Connection=True;MultipleActiveResultSets=True");
+            //optionsBuilder.UseInMemoryDatabase("TestDatabase");
+            optionsBuilder.UseSqlServer(
+                "Server=(localdb)\\mssqllocaldb;Database=BengansBowling;Trusted_Connection=True;MultipleActiveResultSets=True");
             _context = new BengansBowlingContext(optionsBuilder.Options);
             _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
@@ -107,8 +107,8 @@ namespace BengansBowlingIntergrationTestsLib
                 _sut.GetAllTimePeriods().FirstOrDefault(),
                 _sut.GetAllLanes().FirstOrDefault());
 
-            var playerOne = _context.Players.FirstOrDefault();
-            var playerTwo = _context.Players.Skip(1).FirstOrDefault();
+            var playerOne = _context.Players.FirstOrDefault(p => p.LegalId == "7701012345");
+            var playerTwo = _context.Players.FirstOrDefault(p => p.LegalId == "7801012345");
             var match = _context.Matches.FirstOrDefault();
 
             for (int series = 0; series < 3; series++)
@@ -137,8 +137,8 @@ namespace BengansBowlingIntergrationTestsLib
                     _sut.GetAllTimePeriods().FirstOrDefault(),
                     _sut.GetAllLanes().FirstOrDefault());
 
-                var playerOne = _context.Players.FirstOrDefault();
-                var playerTwo = _context.Players.Skip(1).FirstOrDefault();
+                var playerOne = _context.Players.FirstOrDefault(p => p.LegalId == "7701012345");
+                var playerTwo = _context.Players.FirstOrDefault(p => p.LegalId == "7801012345");
                 var currentMatch = _context.Matches.OrderByDescending(o => o.MatchId).FirstOrDefault();
 
                 for (int i = 0; i < 3; i++)
