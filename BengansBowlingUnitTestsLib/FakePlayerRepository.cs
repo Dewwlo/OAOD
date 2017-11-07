@@ -12,7 +12,7 @@ namespace BengansBowlingUnitTestsLib
 
         public void Create(string name, string legalId)
         {
-            _playerList.Add(new Player{Name = name, LegalId = legalId});
+            _playerList.Add(new Player{ PartyId = Guid.NewGuid(), Name = name, LegalId = legalId });
         }
 
         public List<Player> All()

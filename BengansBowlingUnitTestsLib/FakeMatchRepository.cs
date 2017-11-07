@@ -5,6 +5,7 @@ using System.Text;
 using AccountabilityLib;
 using BengansBowlingInterfaceLib;
 using BengansBowlingModelsLib;
+using Remotion.Linq.Clauses;
 
 namespace BengansBowlingUnitTestsLib
 {
@@ -15,14 +16,20 @@ namespace BengansBowlingUnitTestsLib
 
         public void Create(List<Player> players, TimePeriod timePeriod, Lane lane)
         {
-            _matchList.Add(new Match { TimePeriod = timePeriod, Lane = lane });
-            var matchId = _matchList.OrderByDescending(o => o.MatchId).FirstOrDefault().MatchId;
+            var matchId = _matchList.FirstOrDefault() == null ? 1 : _matchList.OrderByDescending(o => o.MatchId).FirstOrDefault().MatchId + 1;
+            var temp = new List<PlayerMatch>();
+            _matchList.Add(new Match {MatchId = matchId, TimePeriod = timePeriod, Lane = lane});
+            var derp = _matchList.OrderByDescending(o => o.MatchId).FirstOrDefault();
+            players.ForEach(p => temp.Add(new PlayerMatch {Player = p, Match = derp}));
+            derp.Players = temp;
             players.ForEach(p => _playerMatchesList.Add(new PlayerMatch { PlayerId = p.PartyId, MatchId = matchId }));
         }
 
         public void Create(List<Player> players, TimePeriod timePeriod, Lane lane, Competition competition)
         {
-            throw new NotImplementedException();
+            var matchId = _matchList.FirstOrDefault() == null ? 1 : _matchList.OrderByDescending(o => o.MatchId).FirstOrDefault().MatchId + 1;
+            _matchList.Add(new Match { MatchId = matchId, TimePeriod = timePeriod, Lane = lane, Competition = competition });
+            players.ForEach(p => _playerMatchesList.Add(new PlayerMatch { Player = p, MatchId = matchId }));
         }
 
         public List<Match> All()
@@ -37,12 +44,27 @@ namespace BengansBowlingUnitTestsLib
 
         public Player Winner(int matchId)
         {
-            throw new NotImplementedException();
+            return _matchList.SingleOrDefault(m => m.MatchId == matchId).MatchWinner;
         }
 
         public Player YearChampion(int year)
         {
-            throw new NotImplementedException();
+            var dict = new Dictionary<Player, Tuple<int, int>>();
+            var matches = _matchList.Where(m => m.TimePeriod.FromDate.Year == year);
+
+            foreach (var match in matches)
+            {
+                foreach (var player in match.Players.Select(p => p.Player))
+                {
+                    if (dict.ContainsKey(player))
+                        dict[player] = new Tuple<int, int>(dict[player].Item1 + 1, dict[player].Item2 + (match.MatchWinner.PartyId == player.PartyId ? 1 : 0));
+                    else
+                        dict.Add(player, new Tuple<int, int>(1, match.MatchWinner.PartyId == player.PartyId ? 1 : 0));
+                }
+            }
+
+            return dict.Select(d => new { d.Key, percent = d.Value.Item2 / d.Value.Item1 })
+                .OrderByDescending(p => p.percent).Select(p => p.Key).FirstOrDefault();
         }
     }
 }

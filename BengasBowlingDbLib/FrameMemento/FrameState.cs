@@ -3,25 +3,34 @@
     public class FrameState
     {
         private string _currentThrow;
-        internal string PreviousThrow;
-        internal string SecondPreviousThrow;
+        private string _previousThrow;
+        private string _secondPreviousThrow;
 
         public FrameState()
         {
             _currentThrow = "None";
-            PreviousThrow = "None";
-            SecondPreviousThrow = "None";
+            _previousThrow = "None";
+            _secondPreviousThrow = "None";
         }
 
         public virtual string CurrentThrow
         {
             set
             {
-                SecondPreviousThrow = PreviousThrow;
-                PreviousThrow = _currentThrow;
+                _secondPreviousThrow = PreviousThrow;
+                _previousThrow = _currentThrow;
                 _currentThrow = value;
             }
             get => CurrentThrow;
+        }
+
+        public virtual string PreviousThrow
+        {
+            get => _previousThrow;
+        }
+        public virtual string SecondPreviousThrow
+        {
+            get => _secondPreviousThrow;
         }
     }
 }

@@ -76,6 +76,8 @@ namespace BengansBowlingLib
 
         public int GetSeriesScore(int [,] scoreArray = null, int[,] frameTen = null) => _seriesRepository.CalculateSeriesScore(scoreArray, frameTen);
 
+        public List<Series> GetAllSeries() => _seriesRepository.All();
+
         public Player GetYearChampion(int year) => _matchRepository.YearChampion(year);
 
         public void CreateLane(string name) => _laneRepository.Create(name);

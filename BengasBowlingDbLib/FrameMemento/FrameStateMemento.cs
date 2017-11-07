@@ -15,11 +15,11 @@
             _copyOfSecondPreviousThrow = frameState.SecondPreviousThrow;
         }
 
-        public virtual void RestoreState()
-        {
-            _frameState.CurrentThrow = _copyOfCurrentThrow;
-            _frameState.PreviousThrow = _copyOfPreviousThrow;
-            _frameState.SecondPreviousThrow = _copyOfSecondPreviousThrow;
-        }
+        //public virtual void RestoreState()
+        //{
+        //    _frameState.CurrentThrow = _copyOfCurrentThrow;
+        //    _frameState.PreviousThrow = _copyOfPreviousThrow;
+        //    _frameState.SecondPreviousThrow = _copyOfSecondPreviousThrow;
+        //}
     }
 }
