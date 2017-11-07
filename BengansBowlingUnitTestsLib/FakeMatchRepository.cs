@@ -12,24 +12,21 @@ namespace BengansBowlingUnitTestsLib
     public class FakeMatchRepository : IMatchRepository
     {
         private readonly List<Match> _matchList = new List<Match>();
-        private readonly List<PlayerMatch> _playerMatchesList = new List<PlayerMatch>();
 
         public void Create(List<Player> players, TimePeriod timePeriod, Lane lane)
         {
             var matchId = _matchList.FirstOrDefault() == null ? 1 : _matchList.OrderByDescending(o => o.MatchId).FirstOrDefault().MatchId + 1;
-            var temp = new List<PlayerMatch>();
-            _matchList.Add(new Match {MatchId = matchId, TimePeriod = timePeriod, Lane = lane});
-            var derp = _matchList.OrderByDescending(o => o.MatchId).FirstOrDefault();
-            players.ForEach(p => temp.Add(new PlayerMatch {Player = p, Match = derp}));
-            derp.Players = temp;
-            players.ForEach(p => _playerMatchesList.Add(new PlayerMatch { PlayerId = p.PartyId, MatchId = matchId }));
+            var match = new Match {MatchId = matchId, TimePeriod = timePeriod, Lane = lane};
+            match.Players = players.Select(p => new PlayerMatch { Player = p, Match = match }).ToList();
+            _matchList.Add(match);
         }
 
         public void Create(List<Player> players, TimePeriod timePeriod, Lane lane, Competition competition)
         {
             var matchId = _matchList.FirstOrDefault() == null ? 1 : _matchList.OrderByDescending(o => o.MatchId).FirstOrDefault().MatchId + 1;
-            _matchList.Add(new Match { MatchId = matchId, TimePeriod = timePeriod, Lane = lane, Competition = competition });
-            players.ForEach(p => _playerMatchesList.Add(new PlayerMatch { Player = p, MatchId = matchId }));
+            var match = new Match { MatchId = matchId, TimePeriod = timePeriod, Lane = lane, Competition = competition };
+            match.Players = players.Select(p => new PlayerMatch {Player = p, Match = match}).ToList();
+            _matchList.Add(match);
         }
 
         public List<Match> All()
@@ -39,7 +36,7 @@ namespace BengansBowlingUnitTestsLib
 
         public List<Player> GetCompetitors(int matchId)
         {
-            return _playerMatchesList.Where(p => p.MatchId == matchId).Select(p => p.Player).ToList();
+            return _matchList.FirstOrDefault(m => m.MatchId == matchId).Players.Select(p => p.Player).ToList();
         }
 
         public Player Winner(int matchId)

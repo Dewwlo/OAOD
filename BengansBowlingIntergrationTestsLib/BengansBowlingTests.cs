@@ -159,7 +159,16 @@ namespace BengansBowlingIntergrationTestsLib
             var array = new[,] { { 10, 0 }, { 6, 4 }, { 3, 5 }, { 10, 0 }, { 10, 0 }, { 2, 0 }, { 5, 3 }, { 7, 3 }, { 8, 2 } };
             var frameTen = new[,] { { 4, 6, 10 } };
             var score = _sut.GetSeriesScore(array, frameTen);
-            Assert.Equal(137, score);
+            _sut.CreatePlayer("Sture Sturesson", "7701012345");
+            _sut.CreateLane("Bana 1");
+            _sut.CreateTimePeriod(new DateTime(2017, 6, 20, 16, 0, 0), new DateTime(2017, 6, 20, 18, 0, 0));
+            _sut.CreateMatch(
+                _sut.GetAllParties,
+                _sut.GetAllTimePeriods().FirstOrDefault(),
+                _sut.GetAllLanes().FirstOrDefault());
+            _sut.CreateSeries(_context.Players.FirstOrDefault(), _context.Matches.FirstOrDefault());
+            _sut.AddSeriesScore(_sut.GetAllSeries().FirstOrDefault().SeriesId,score);
+            Assert.Equal(137, _sut.GetAllSeries().FirstOrDefault().Score);
         }
 
         [Fact]
@@ -168,7 +177,16 @@ namespace BengansBowlingIntergrationTestsLib
             var array = new[,] { { 10, 0 }, { 10, 0 }, { 10, 0 }, { 10, 0 }, { 10, 0 }, { 10, 0 }, { 10, 0 }, { 10, 0 }, { 10, 0 } };
             var frameTen = new[,] { { 10, 10, 10 } };
             var score = _sut.GetSeriesScore(array, frameTen);
-            Assert.Equal(300, score);
+            _sut.CreatePlayer("Sture Sturesson", "7701012345");
+            _sut.CreateLane("Bana 1");
+            _sut.CreateTimePeriod(new DateTime(2017, 6, 20, 16, 0, 0), new DateTime(2017, 6, 20, 18, 0, 0));
+            _sut.CreateMatch(
+                _sut.GetAllParties,
+                _sut.GetAllTimePeriods().FirstOrDefault(),
+                _sut.GetAllLanes().FirstOrDefault());
+            _sut.CreateSeries(_context.Players.FirstOrDefault(), _context.Matches.FirstOrDefault());
+            _sut.AddSeriesScore(_sut.GetAllSeries().FirstOrDefault().SeriesId, score);
+            Assert.Equal(300, _sut.GetAllSeries().FirstOrDefault().Score);
         }
     }
 }

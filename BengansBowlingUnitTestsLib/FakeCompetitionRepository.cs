@@ -11,15 +11,20 @@ namespace BengansBowlingUnitTestsLib
     public class FakeCompetitionRepository : ICompetitionRepository
     {
         private readonly List<Competition> _competitionList = new List<Competition>();
-        private readonly List<PlayerCompetition> _playerCompetition = new List<PlayerCompetition>();
         public void Create(string name, string type)
         {
             AbsctractCompetitionFactory factory = null;
-            if (type == "knockout")
-                factory = new KnockoutCompetitionFactory();
-            else
-                factory = new GroupCompetitionFactory();
 
+            switch (type)
+            {
+                case "knockout":
+                    factory = new KnockoutCompetitionFactory();
+                    break;
+                default:
+                    factory = new GroupCompetitionFactory();
+                    break;
+            }
+            
             var competition = factory.CreateCompetition();
             _competitionList.Add(new Competition
             {
@@ -33,10 +38,16 @@ namespace BengansBowlingUnitTestsLib
         public void Create(string name, string type, decimal winnerPriceSum)
         {
             AbsctractCompetitionFactory factory = null;
-            if (type == "knockout")
-                factory = new KnockoutCompetitionFactory();
-            else
-                factory = new GroupCompetitionFactory();
+
+            switch (type)
+            {
+                case "knockout":
+                    factory = new KnockoutCompetitionFactory();
+                    break;
+                default:
+                    factory = new GroupCompetitionFactory();
+                    break;
+            }
 
             var competition = factory.CreateCompetition();
             _competitionList.Add(new Competition
@@ -51,9 +62,8 @@ namespace BengansBowlingUnitTestsLib
 
         public void AddCompetitor(int competitionId, Player player)
         {
-            var playerCompetition = new PlayerCompetition{PlayerId = player.PartyId, CompetitionId = competitionId};
-            _playerCompetition.Add(playerCompetition);
-            _competitionList.SingleOrDefault(c => c.CompetitionId == competitionId).Players.Add(playerCompetition);
+            var competition = _competitionList.SingleOrDefault(c => c.CompetitionId == competitionId);
+            competition.Players.Add(new PlayerCompetition{Competition = competition, Player = player});
         }
 
         public void AddMatch(int competitionId, Match match)
@@ -78,7 +88,7 @@ namespace BengansBowlingUnitTestsLib
 
         public List<Player> GetCompetitors(int competitionId)
         {
-            return _playerCompetition.Where(pc => pc.CompetitionId == competitionId).Select(p => p.Player).ToList();
+            return _competitionList.SingleOrDefault(pc => pc.CompetitionId == competitionId).Players.Select(p => p.Player).ToList();
         }
     }
 }
